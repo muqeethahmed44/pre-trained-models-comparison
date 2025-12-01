@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pre-Trained Models Comparison Matrix</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 40px 20px;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 50px 40px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.95;
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .content {
+        padding: 50px 40px;
+      }
+
+      .intro-section {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 40px;
+      }
+
+      .intro-section h2 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.8em;
+      }
+
+      .intro-section p {
+        line-height: 1.8;
+        color: #34495e;
+        font-size: 1.05em;
+      }
+
+      .domain-section {
+        margin-bottom: 50px;
+      }
+
+      .domain-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        color: white;
+      }
+
+      .domain-icon {
+        font-size: 3em;
+        margin-right: 20px;
+      }
+
+      .domain-title h2 {
+        font-size: 2em;
+        margin-bottom: 5px;
+      }
+
+      .domain-title p {
+        opacity: 0.9;
+        font-size: 1.1em;
+      }
+
+      .models-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+      }
+
+      .model-card {
+        background: white;
+        border: 2px solid #e1e8ed;
+        border-radius: 15px;
+        padding: 25px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .model-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        border-color: #667eea;
+      }
+
+      .model-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .model-name {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+
+      .metric-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .metric-row:last-child {
+        border-bottom: none;
+      }
+
+      .metric-label {
+        font-weight: 600;
+        color: #555;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .metric-icon {
+        font-size: 1.2em;
+      }
+
+      .metric-value {
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.95em;
+      }
+
+      .rating-high {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .rating-medium {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .rating-low {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .use-cases {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
+
+      .use-cases h4 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+
+      .use-cases ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .use-cases li {
+        padding: 8px 0;
+        color: #555;
+        position: relative;
+        padding-left: 25px;
+      }
+
+      .use-cases li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #667eea;
+        font-weight: bold;
+      }
+
+      .comparison-matrix {
+        margin: 50px 0;
+        overflow-x: auto;
+      }
+
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .comparison-table thead {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+      }
+
+      .comparison-table th {
+        padding: 20px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 1.1em;
+      }
+
+      .comparison-table td {
+        padding: 18px 20px;
+        border-bottom: 1px solid #e1e8ed;
+      }
+
+      .comparison-table tbody tr:hover {
+        background: #f8f9fa;
+      }
+
+      .model-column {
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 1.05em;
+      }
+
+      .recommendations {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 15px;
+        margin-top: 50px;
+      }
+
+      .recommendations h2 {
+        font-size: 2em;
+        margin-bottom: 25px;
+        text-align: center;
+      }
+
+      .recommendation-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
+
+      .recommendation-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 25px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .recommendation-card h3 {
+        font-size: 1.3em;
+        margin-bottom: 12px;
+      }
+
+      .recommendation-card p {
+        line-height: 1.6;
+        opacity: 0.95;
+      }
+
+      .legend {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin: 30px 0;
+        flex-wrap: wrap;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .legend-color {
+        width: 30px;
+        height: 30px;
+        border-radius: 5px;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 30px;
+        background: #f8f9fa;
+        color: #666;
+        font-size: 0.95em;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 1.8em;
+        }
+
+        .models-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .domain-header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .domain-icon {
+          margin-right: 0;
+          margin-bottom: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Pre-Trained Models Comparison Matrix</h1>
+        <p>
+          A Comprehensive Analysis of Model Size, Accuracy, Speed, and Use Cases
+          Across AI Domains
+        </p>
+      </div>
+
+      <div class="content">
+        <div class="intro-section">
+          <h2>Understanding the Trade-offs</h2>
+          <p>
+            Selecting the right pre-trained model requires balancing multiple
+            factors including model size (parameters and memory), accuracy
+            (benchmark performance), inference speed (latency), and
+            domain-specific requirements. This decision matrix provides a
+            detailed comparison across Natural Language Processing, Computer
+            Vision, and Tabular Data domains to guide optimal model selection
+            for your specific application needs.
+          </p>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-color rating-high"></div>
+            <span><strong>High/Excellent</strong></span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color rating-medium"></div>
+            <span><strong>Medium/Good</strong></span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color rating-low"></div>
+            <span><strong>Low/Fair</strong></span>
+          </div>
+        </div>
+
+        <div class="domain-section">
+          <div class="domain-header">
+            <div class="domain-icon">🗣️</div>
+            <div class="domain-title">
+              <h2>Natural Language Processing (NLP)</h2>
+              <p>Language understanding and generation models</p>
+            </div>
+          </div>
+
+          <div class="models-grid">
+            <div class="model-card">
+              <div class="model-name">GPT-4</div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">💾</span>
+                  Model Size
+                </div>
+                <div class="metric-value rating-low">1.8T params</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">🎯</span>
+                  Accuracy
+                </div>
+                <div class="metric-value rating-high">Excellent</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">⚡</span>
+                  Speed
+                </div>
+                <div class="metric-value rating-medium">Moderate</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">🔌</span>
+                  Integration
+                </div>
+                <div class="metric-value rating-high">API-based</div>
+              </div>
+              <div class="use-cases">
+                <h4>Best Use Cases:</h4>
+                <ul>
+                  <li>Content generation and creative writing</li>
+                  <li>Complex reasoning and problem-solving</li>
+                  <li>Multi-turn conversations</li>
+                  <li>Code generation and debugging</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="model-card">
+              <div class="model-name">BERT-Base</div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">💾</span>
+                  Model Size
+                </div>
+                <div class="metric-value rating-high">110M params</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">🎯</span>
+                  Accuracy
+                </div>
+                <div class="metric-value rating-high">High</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">⚡</span>
+                  Speed
+                </div>
+                <div class="metric-value rating-medium">Moderate</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">🔧</span>
+                  Fine-tuning
+                </div>
+                <div class="metric-value rating-high">Easy</div>
+              </div>
+              <div class="use-cases">
+                <h4>Best Use Cases:</h4>
+                <ul>
+                  <li>Sentiment analysis and classification</li>
+                  <li>Question answering systems</li>
+                  <li>Named entity recognition</li>
+                  <li>Text understanding tasks</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="domain-section">
+          <div class="domain-header">
+            <div class="domain-icon">👁️</div>
+            <div class="domain-title">
+              <h2>Computer Vision</h2>
+              <p>Image classification and object detection models</p>
+            </div>
+          </div>
+
+          <div class="models-grid">
+            <div class="model-card">
+              <div class="model-name">EfficientNet-B0</div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">💾</span>
+                  Model Size
+                </div>
+                <div class="metric-value rating-high">5.3M params</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">🎯</span>
+                  Accuracy
+                </div>
+                <div class="metric-value rating-high">77.1% Top-1</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">⚡</span>
+                  Speed
+                </div>
+                <div class="metric-value rating-high">Fast</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">⚖️</span>
+                  Balance
+                </div>
+                <div class="metric-value rating-high">Optimal</div>
+              </div>
+              <div class="use-cases">
+                <h4>Best Use Cases:</h4>
+                <ul>
+                  <li>Medical image analysis</li>
+                  <li>Quality control in manufacturing</li>
+                  <li>Agricultural disease detection</li>
+                  <li>General image classification</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="model-card">
+              <div class="model-name">MobileNetV2</div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">💾</span>
+                  Model Size
+                </div>
+                <div class="metric-value rating-high">3.4M params</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">🎯</span>
+                  Accuracy
+                </div>
+                <div class="metric-value rating-medium">71.7% Top-1</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">⚡</span>
+                  Speed
+                </div>
+                <div class="metric-value rating-high">Very Fast</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">📱</span>
+                  Deployment
+                </div>
+                <div class="metric-value rating-high">Mobile-ready</div>
+              </div>
+              <div class="use-cases">
+                <h4>Best Use Cases:</h4>
+                <ul>
+                  <li>Mobile and edge device deployment</li>
+                  <li>Real-time object detection</li>
+                  <li>IoT applications</li>
+                  <li>Resource-constrained environments</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="domain-section">
+          <div class="domain-header">
+            <div class="domain-icon">📊</div>
+            <div class="domain-title">
+              <h2>Tabular Data</h2>
+              <p>Structured data classification and regression models</p>
+            </div>
+          </div>
+
+          <div class="models-grid">
+            <div class="model-card">
+              <div class="model-name">LightGBM</div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">💾</span>
+                  Memory
+                </div>
+                <div class="metric-value rating-high">Low</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">🎯</span>
+                  Accuracy
+                </div>
+                <div class="metric-value rating-high">94.4%</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">⚡</span>
+                  Speed
+                </div>
+                <div class="metric-value rating-high">Fastest</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">📈</span>
+                  Scalability
+                </div>
+                <div class="metric-value rating-high">Excellent</div>
+              </div>
+              <div class="use-cases">
+                <h4>Best Use Cases:</h4>
+                <ul>
+                  <li>Large-scale dataset processing</li>
+                  <li>Financial forecasting</li>
+                  <li>Click-through rate prediction</li>
+                  <li>Ranking systems</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="model-card">
+              <div class="model-name">XGBoost</div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">💾</span>
+                  Memory
+                </div>
+                <div class="metric-value rating-medium">Medium</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">🎯</span>
+                  Accuracy
+                </div>
+                <div class="metric-value rating-high">93.7%</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">⚡</span>
+                  Speed
+                </div>
+                <div class="metric-value rating-medium">Moderate</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">🛡️</span>
+                  Robustness
+                </div>
+                <div class="metric-value rating-high">High</div>
+              </div>
+              <div class="use-cases">
+                <h4>Best Use Cases:</h4>
+                <ul>
+                  <li>Competition-level performance</li>
+                  <li>Medical diagnosis predictions</li>
+                  <li>Fraud detection systems</li>
+                  <li>Credit risk assessment</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="model-card">
+              <div class="model-name">Random Forest</div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">💾</span>
+                  Memory
+                </div>
+                <div class="metric-value rating-medium">Medium</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">🎯</span>
+                  Accuracy
+                </div>
+                <div class="metric-value rating-medium">75.4%</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">⚡</span>
+                  Speed
+                </div>
+                <div class="metric-value rating-medium">Moderate</div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">
+                  <span class="metric-icon">🔍</span>
+                  Interpretability
+                </div>
+                <div class="metric-value rating-high">Excellent</div>
+              </div>
+              <div class="use-cases">
+                <h4>Best Use Cases:</h4>
+                <ul>
+                  <li>Feature importance analysis</li>
+                  <li>Baseline modeling</li>
+                  <li>Healthcare decision support</li>
+                  <li>Easy-to-tune applications</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="comparison-matrix">
+          <h2 style="text-align: center; margin-bottom: 30px; color: #2c3e50">
+            Complete Decision Matrix
+          </h2>
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Domain</th>
+                <th>Size/Parameters</th>
+                <th>Accuracy</th>
+                <th>Speed</th>
+                <th>Primary Strength</th>
+                <th>Best For</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="model-column">GPT-4</td>
+                <td>NLP</td>
+                <td>1.8T parameters</td>
+                <td><span class="metric-value rating-high">Excellent</span></td>
+                <td>
+                  <span class="metric-value rating-medium">Moderate</span>
+                </td>
+                <td>Reasoning & Generation</td>
+                <td>Complex language tasks</td>
+              </tr>
+              <tr>
+                <td class="model-column">BERT-Base</td>
+                <td>NLP</td>
+                <td>110M parameters</td>
+                <td><span class="metric-value rating-high">High</span></td>
+                <td>
+                  <span class="metric-value rating-medium">Moderate</span>
+                </td>
+                <td>Understanding & Classification</td>
+                <td>Fine-tuning on specific tasks</td>
+              </tr>
+              <tr>
+                <td class="model-column">EfficientNet-B0</td>
+                <td>Vision</td>
+                <td>5.3M parameters</td>
+                <td><span class="metric-value rating-high">77.1%</span></td>
+                <td><span class="metric-value rating-high">Fast</span></td>
+                <td>Accuracy-Efficiency Balance</td>
+                <td>Production image tasks</td>
+              </tr>
+              <tr>
+                <td class="model-column">MobileNetV2</td>
+                <td>Vision</td>
+                <td>3.4M parameters</td>
+                <td><span class="metric-value rating-medium">71.7%</span></td>
+                <td><span class="metric-value rating-high">Very Fast</span></td>
+                <td>Mobile Optimization</td>
+                <td>Edge devices & IoT</td>
+              </tr>
+              <tr>
+                <td class="model-column">LightGBM</td>
+                <td>Tabular</td>
+                <td>Low memory</td>
+                <td><span class="metric-value rating-high">94.4%</span></td>
+                <td><span class="metric-value rating-high">Fastest</span></td>
+                <td>Speed & Scalability</td>
+                <td>Large datasets</td>
+              </tr>
+              <tr>
+                <td class="model-column">XGBoost</td>
+                <td>Tabular</td>
+                <td>Medium memory</td>
+                <td><span class="metric-value rating-high">93.7%</span></td>
+                <td>
+                  <span class="metric-value rating-medium">Moderate</span>
+                </td>
+                <td>Robustness & Accuracy</td>
+                <td>Competition-level tasks</td>
+              </tr>
+              <tr>
+                <td class="model-column">Random Forest</td>
+                <td>Tabular</td>
+                <td>Medium memory</td>
+                <td><span class="metric-value rating-medium">75.4%</span></td>
+                <td>
+                  <span class="metric-value rating-medium">Moderate</span>
+                </td>
+                <td>Interpretability</td>
+                <td>Baseline & explainable AI</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="recommendations">
+          <h2>Selection Recommendations</h2>
+          <div class="recommendation-grid">
+            <div class="recommendation-card">
+              <h3>💡 For Resource Constraints</h3>
+              <p>
+                Choose MobileNetV2 (vision) or LightGBM (tabular) for deployment
+                on edge devices, mobile applications, or when computational
+                resources are limited.
+              </p>
+            </div>
+            <div class="recommendation-card">
+              <h3>🎯 For Maximum Accuracy</h3>
+              <p>
+                Select GPT-4 (NLP), EfficientNet-B0 (vision), or LightGBM
+                (tabular) when accuracy is the primary concern and resources are
+                available.
+              </p>
+            </div>
+            <div class="recommendation-card">
+              <h3>⚡ For Speed Priority</h3>
+              <p>
+                Opt for LightGBM for tabular data or MobileNetV2 for vision
+                tasks when inference speed is critical for real-time
+                applications.
+              </p>
+            </div>
+            <div class="recommendation-card">
+              <h3>🔧 For Easy Fine-tuning</h3>
+              <p>
+                BERT-Base excels in NLP fine-tuning scenarios, while Random
+                Forest offers straightforward parameter tuning for tabular data.
+              </p>
+            </div>
+            <div class="recommendation-card">
+              <h3>📊 For Interpretability</h3>
+              <p>
+                Random Forest provides the best feature importance insights for
+                tabular data when model explainability is required.
+              </p>
+            </div>
+            <div class="recommendation-card">
+              <h3>🚀 For Production Scale</h3>
+              <p>
+                LightGBM and EfficientNet-B0 offer the best balance of accuracy,
+                speed, and resource efficiency for large-scale production
+                deployments.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>
+          Data sourced from academic research papers, benchmark studies, and
+          official model documentation (2024-2025)
+        </p>
+        <p style="margin-top: 10px">
+          Created by Muqeeth Mohammad | Indiana Wesleyan University | AI/ML
+          Portfolio
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
